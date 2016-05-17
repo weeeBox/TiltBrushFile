@@ -2,6 +2,7 @@
 using UnityEditor;
 
 using System.Collections;
+using TiltBrush;
 
 public class TiltReader
 {

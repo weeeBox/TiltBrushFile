@@ -2,9 +2,19 @@
 using System.IO;
 
 using UnityEngine;
+using Ionic.Zip;
 
 public static class Extensions
 {
+    #region BinaryReader
+
+    public static string ReadString(this BinaryReader reader, int length)
+    {
+        char[] chars = new char[length];
+        reader.Read(chars, 0, chars.Length);
+        return new string(chars, 0, chars.Length);
+    }
+
     public static Color ReadColor(this BinaryReader reader)
     {
         float r = reader.ReadFloat();
@@ -43,5 +53,39 @@ public static class Extensions
     {
         reader.BaseStream.Position += size;
     }
+
+    #endregion
+
+    #region ZipFile
+
+    public static Stream OpenRead(this ZipFile zipFile, string fileName)
+    {
+        foreach (var entry in zipFile.Entries)
+        {
+            if (entry.FileName == fileName)
+            {
+                return OpenRead(entry);
+            }
+        }
+
+        return null;
+    }
+
+    static Stream OpenRead(ZipEntry entry)
+    {
+        string tempDir = Path.GetTempPath();
+        entry.Extract(tempDir, ExtractExistingFileAction.OverwriteSilently);
+        string tempPath = Path.Combine(tempDir, entry.FileName);
+        try
+        {
+            return new MemoryStream(File.ReadAllBytes(tempPath));
+        }
+        finally
+        {
+            if (File.Exists(tempPath)) File.Delete(tempPath);
+        }
+    }
+
+    #endregion
 }
 
