@@ -17,10 +17,14 @@ namespace TiltBrush
         private static readonly int SKETCH_VERSION = 5;
 
         private List<BrushStroke> m_brushStrokes;
+        private string m_metadata;
+        private byte[] m_thumbnailBytes;
 
-        public TiltFile(List<BrushStroke> brushStrokes)
+        public TiltFile(List<BrushStroke> brushStrokes, string metadata, byte[] previewBytes)
         {
-            this.m_brushStrokes = brushStrokes;
+            m_brushStrokes = brushStrokes;
+            m_metadata = metadata;
+            m_thumbnailBytes = previewBytes;
         }
 
         public static TiltFile Read(string path)
@@ -53,15 +57,15 @@ namespace TiltBrush
             {
                 using (ZipFile zipFile = ZipFile.Read(stream))
                 {
-                    // "metadata.json"
-                    // "data.sketch"
-
                     List<BrushStroke> brushStrokes = ReadBrushStrokes(zipFile);
-                    return new TiltFile(brushStrokes);
+                    string metadata = ReadMetadata(zipFile);
+                    byte[] thumbnailBytes = ReadThumbnailBytes(zipFile);
+
+                    return new TiltFile(brushStrokes, metadata, thumbnailBytes);
                 }
             }
         }
-
+        
         private static List<BrushStroke> ReadBrushStrokes(ZipFile zipFile)
         {
             using (Stream stream = zipFile.OpenRead("data.sketch"))
@@ -89,6 +93,20 @@ namespace TiltBrush
                     return brushStrokes;
                 }
             }
+        }
+
+        private static string ReadMetadata(ZipFile zipFile)
+        {
+            return zipFile.ReadAllText("metadata.json");
+        }
+
+        private static byte[] ReadThumbnailBytes(ZipFile zipFile)
+        {
+            return zipFile.ReadAllBytes("thumbnail.png");
+        }
+
+        public void Write(string path)
+        {   
         }
 
         public List<BrushStroke> brushStrokes

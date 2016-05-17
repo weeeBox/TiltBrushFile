@@ -60,30 +60,49 @@ public static class Extensions
 
     public static Stream OpenRead(this ZipFile zipFile, string fileName)
     {
+        string path = ExtractTemp(zipFile, fileName);
+        return File.OpenRead(path);
+    }
+
+    public static string ReadAllText(this ZipFile zipFile, string fileName)
+    {
+        string path = ExtractTemp(zipFile, fileName);
+        try
+        {
+            return File.ReadAllText(path);
+        }
+        finally
+        {
+            if (File.Exists(path)) File.Delete(path);
+        }
+    }
+
+    public static byte[] ReadAllBytes(this ZipFile zipFile, string fileName)
+    {
+        string path = ExtractTemp(zipFile, fileName);
+        try
+        {
+            return File.ReadAllBytes(path);
+        }
+        finally
+        {
+            if (File.Exists(path)) File.Delete(path);
+        }
+    }
+
+    static string ExtractTemp(ZipFile zipFile, string fileName)
+    {
         foreach (var entry in zipFile.Entries)
         {
             if (entry.FileName == fileName)
             {
-                return OpenRead(entry);
+                string tempDir = Path.GetTempPath();
+                entry.Extract(tempDir, ExtractExistingFileAction.OverwriteSilently);
+                return Path.Combine(tempDir, entry.FileName);
             }
         }
 
         return null;
-    }
-
-    static Stream OpenRead(ZipEntry entry)
-    {
-        string tempDir = Path.GetTempPath();
-        entry.Extract(tempDir, ExtractExistingFileAction.OverwriteSilently);
-        string tempPath = Path.Combine(tempDir, entry.FileName);
-        try
-        {
-            return new MemoryStream(File.ReadAllBytes(tempPath));
-        }
-        finally
-        {
-            if (File.Exists(tempPath)) File.Delete(tempPath);
-        }
     }
 
     #endregion
