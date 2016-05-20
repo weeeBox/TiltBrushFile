@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+using System.IO;
 using System.Collections;
 
 using TiltBrush;
@@ -16,8 +17,9 @@ public class StrokeBuilderEditor : Editor
         {
             StrokeBuilder builder = target as StrokeBuilder;
             GameObject co = builder.controlPoint;
-            
-            TiltFile tiltFile = TiltFile.Read(@"C:\Users\Alex Lementuev\Documents\Tilt Brush\Sketches\Untitled_9.tilt");
+
+            string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
+            TiltFile tiltFile = new TiltFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
                 foreach (var controlPoint in brushStroke.controlPoints)

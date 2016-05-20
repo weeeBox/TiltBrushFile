@@ -56,53 +56,49 @@ public static class Extensions
 
     #endregion
 
-    #region ZipFile
+    #region BinaryWritter
 
-    public static Stream OpenRead(this ZipFile zipFile, string fileName)
+    public static void Write(this BinaryWriter writter, string value, int length)
     {
-        string path = ExtractTemp(zipFile, fileName);
-        return File.OpenRead(path);
+        char[] chars = value.ToCharArray(0, length);
+        writter.Write(chars, 0, chars.Length);
     }
 
-    public static string ReadAllText(this ZipFile zipFile, string fileName)
+    public static void Write(this BinaryWriter writter, Color value)
     {
-        string path = ExtractTemp(zipFile, fileName);
-        try
-        {
-            return File.ReadAllText(path);
-        }
-        finally
-        {
-            if (File.Exists(path)) File.Delete(path);
-        }
+        writter.Write(value.r);
+        writter.Write(value.g);
+        writter.Write(value.b);
+        writter.Write(value.a);
     }
 
-    public static byte[] ReadAllBytes(this ZipFile zipFile, string fileName)
+    public static void Write(this BinaryWriter writter, Vector3 value)
     {
-        string path = ExtractTemp(zipFile, fileName);
-        try
-        {
-            return File.ReadAllBytes(path);
-        }
-        finally
-        {
-            if (File.Exists(path)) File.Delete(path);
-        }
+        writter.Write(value.x);
+        writter.Write(value.y);
+        writter.Write(value.z);
     }
 
-    static string ExtractTemp(ZipFile zipFile, string fileName)
+    public static void Write(this BinaryWriter writter, Quaternion value)
     {
-        foreach (var entry in zipFile.Entries)
-        {
-            if (entry.FileName == fileName)
-            {
-                string tempDir = Path.GetTempPath();
-                entry.Extract(tempDir, ExtractExistingFileAction.OverwriteSilently);
-                return Path.Combine(tempDir, entry.FileName);
-            }
-        }
+        writter.Write(value.x);
+        writter.Write(value.y);
+        writter.Write(value.z);
+        writter.Write(value.w);
+    }
 
-        return null;
+    #endregion
+
+    #region ZipEntry
+
+    public static string ExtractToFile(this ZipEntry entry, string baseDir)
+    {
+        string path = Path.Combine(baseDir, entry.FileName);
+        using (FileStream stream = File.OpenWrite(path))
+        {
+            entry.Extract(stream);
+        }
+        return path;
     }
 
     #endregion

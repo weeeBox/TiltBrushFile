@@ -5,29 +5,27 @@ using UnityEngine;
 
 namespace TiltBrush
 {
-    public class ControlPoint
+    public class ControlPoint : TiltFileChunk
     {
-        private float pressure;
-        private uint timestamp;
-
-        public ControlPoint(Vector3 position, Quaternion orientaion, float pressure, uint timestamp)
+        public ControlPoint(BinaryReader reader)
         {
-            this.position = position;
-            this.orientaion = orientaion;
-            this.pressure = pressure;
-            this.timestamp = timestamp;
+            this.position = reader.ReadVector3();
+            this.orientaion = reader.ReadQuaternion();
+            this.pressure = reader.ReadFloat();
+            this.timestamp = reader.ReadUInt32(); 
         }
 
-        public static ControlPoint Read(BinaryReader reader)
+        public override void Write(BinaryWriter writter)
         {
-            Vector3 position = reader.ReadVector3();
-            Quaternion orientaion = reader.ReadQuaternion();
-            float pressure = reader.ReadFloat();
-            uint timestamp = reader.ReadUInt32(); 
-            return new ControlPoint(position, orientaion, pressure, timestamp);
+            writter.Write(this.position);
+            writter.Write(this.orientaion);
+            writter.Write(this.pressure);
+            writter.Write(this.timestamp);
         }
 
         public Quaternion orientaion { get; set; }
         public Vector3 position { get; set; }
+        public float pressure { get; set; }
+        public UInt32 timestamp { get; set; }
     }
 }

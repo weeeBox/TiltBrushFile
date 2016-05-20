@@ -13,43 +13,40 @@ namespace TiltBrush
 {
     public class TiltFile
     {
+        static readonly string kFileSketchData  = "data.sketch";
+        static readonly string kFileMetadata    = "metadata.json";
+        static readonly string kFileThumbnail   = "thumbnail.png";
+
         private static readonly uint SKETCH_SENTINEL = 3312887245u;
         private static readonly int SKETCH_VERSION = 5;
 
-        private List<BrushStroke> m_brushStrokes;
-        private string m_metadata;
-        private byte[] m_thumbnailBytes;
+        TiltHeader m_header;
+        BrushStrokes m_brushStrokes;
+        string m_metadata;
+        byte[] m_thumbnailBytes;
 
-        public TiltFile(List<BrushStroke> brushStrokes, string metadata, byte[] previewBytes)
-        {
-            m_brushStrokes = brushStrokes;
-            m_metadata = metadata;
-            m_thumbnailBytes = previewBytes;
-        }
-
-        public static TiltFile Read(string path)
+        public TiltFile(string path)
         {
             using (FileStream stream = File.OpenRead(path))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    return Read(reader);
+                    Read(reader);
                 }
             }
         }
 
-        static TiltFile Read(BinaryReader reader)
+        public TiltFile(Stream stream)
         {
-            string sentinel = reader.ReadString(4);
-            if (sentinel != "tilT")
+            using (BinaryReader reader = new BinaryReader(stream))
             {
-                throw new Exception("Wrong sentinel: " + sentinel);
+                Read(reader);
             }
+        }
 
-            uint16 headerSize = reader.ReadUInt16();
-            uint16 headerVersion = reader.ReadUInt16();
-            reader.ReadUInt32();
-            reader.ReadUInt32();
+        void Read(BinaryReader reader)
+        {
+            m_header = new TiltHeader(reader);
 
             byte[] bytes = new byte[reader.BaseStream.Length - reader.BaseStream.Position];
             reader.Read(bytes, 0, bytes.Length);
@@ -57,59 +54,126 @@ namespace TiltBrush
             {
                 using (ZipFile zipFile = ZipFile.Read(stream))
                 {
-                    List<BrushStroke> brushStrokes = ReadBrushStrokes(zipFile);
-                    string metadata = ReadMetadata(zipFile);
-                    byte[] thumbnailBytes = ReadThumbnailBytes(zipFile);
+                    string tempDir = GetTempDirectory(".tilt-in");
+                    foreach (var entry in zipFile.Entries)
+                    {
+                        entry.ExtractToFile(tempDir);
+                    }
 
-                    return new TiltFile(brushStrokes, metadata, thumbnailBytes);
+                    try
+                    {
+                        m_brushStrokes = ReadBrushStrokes(Path.Combine(tempDir, kFileSketchData));
+                        m_metadata = ReadMetadata(Path.Combine(tempDir, kFileMetadata));
+                        m_thumbnailBytes = ReadThumbnailBytes(Path.Combine(tempDir, kFileThumbnail));
+                    }
+                    finally
+                    {
+                        Directory.Delete(tempDir, true);
+                    }
                 }
             }
         }
-        
-        private static List<BrushStroke> ReadBrushStrokes(ZipFile zipFile)
+
+        #region Read
+
+        static BrushStrokes ReadBrushStrokes(string path)
         {
-            using (Stream stream = zipFile.OpenRead("data.sketch"))
+            using (Stream stream = File.OpenRead(path))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    uint32 sentinel = reader.ReadUInt32();
-                    if (sentinel != SKETCH_SENTINEL)
-                    {
-                        throw new Exception("Wrong sentinel: " + sentinel);
-                    }
-
-                    uint32 version = reader.ReadUInt32();
-                    uint32 reserved = reader.ReadUInt32();
-                    uint32 size = reader.ReadUInt32();
-                    reader.Skip(size);
-
-                    int32 strokeCount = reader.ReadInt32();
-                    List<BrushStroke> brushStrokes = new List<BrushStroke>(strokeCount);
-                    for (int strokeIndex = 0; strokeIndex < strokeCount; ++strokeIndex)
-                    {
-                        brushStrokes.Add(BrushStroke.Read(reader));
-                    }
-
-                    return brushStrokes;
+                    return new BrushStrokes(reader);
                 }
             }
         }
 
-        private static string ReadMetadata(ZipFile zipFile)
+        static string ReadMetadata(string path)
         {
-            return zipFile.ReadAllText("metadata.json");
+            return File.ReadAllText(path);
         }
 
-        private static byte[] ReadThumbnailBytes(ZipFile zipFile)
+        static byte[] ReadThumbnailBytes(string path)
         {
-            return zipFile.ReadAllBytes("thumbnail.png");
+            return File.ReadAllBytes(path);
         }
+
+        #endregion
+
+        #region Write
 
         public void Write(string path)
-        {   
+        {
+            string tempDir = GetTempDirectory(".tilt-out");
+            try
+            {
+                WriteToTempDir(tempDir);
+
+                using (FileStream stream = File.OpenWrite(path))
+                {
+                    using (BinaryWriter writter = new BinaryWriter(stream))
+                    {
+                        m_header.Write(writter);
+
+                        using (ZipFile zipFile = new ZipFile())
+                        {
+                            foreach (string file in Directory.GetFiles(tempDir))
+                            {
+                                zipFile.AddFile(file);
+                            }
+                            zipFile.Save(writter.BaseStream);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (Directory.Exists(tempDir))
+                {
+                    Directory.Delete(tempDir, true);
+                }
+            }
         }
 
-        public List<BrushStroke> brushStrokes
+        void WriteToTempDir(string tempDir)
+        {
+            string sketchFile  = Path.Combine(tempDir, "data.sketch");
+            using (FileStream stream = File.OpenWrite(sketchFile))
+            {
+                using (BinaryWriter writter = new BinaryWriter(stream))
+                {
+                    m_brushStrokes.Write(writter);
+                }
+            }
+
+            string metadataFile = Path.Combine(tempDir, "metadata.json");
+            File.WriteAllText(metadataFile, m_metadata);
+
+            string thumbnailFile = Path.Combine(tempDir, "thumbnail.png");
+            File.WriteAllBytes(thumbnailFile, m_thumbnailBytes);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        static string GetTempDirectory(string name, bool createIsNotExists = true)
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), name);
+            if (Directory.Exists(tempDir))
+            {
+                Directory.Delete(tempDir, true);
+            }
+            if (createIsNotExists)
+            {
+                Directory.CreateDirectory(tempDir);
+            }
+
+            return tempDir;
+        }
+
+        #endregion
+
+        public BrushStrokes brushStrokes
         {
             get { return m_brushStrokes; }
         }
