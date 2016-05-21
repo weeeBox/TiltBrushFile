@@ -9,9 +9,19 @@ public class FakeStroke : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        DrawStroke(false);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        DrawStroke(true);
+    }
+
+    void DrawStroke(bool selected)
+    {
         if (m_brushStroke != null)
         {
-            Color color = m_brushStroke.brushColor;
+            Color color = selected ? Color.white : m_brushStroke.brushColor;
             Gizmos.color = color;
             Vector3 start = m_brushStroke.controlPoints[0].position;
             for (int i = 1; i < m_brushStroke.controlPoints.Count; ++i)
