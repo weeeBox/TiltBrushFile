@@ -4,6 +4,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using TiltBrush;
+using System;
 
 public class MenuItems
 {
@@ -30,6 +31,8 @@ public class MenuItems
 
         if (selectedStrokes.Count > 0)
         {
+            selectedStrokes = AlignStokes(selectedStrokes);
+
             StrokeBuilder builder = GameObject.FindObjectOfType<StrokeBuilder>();
             TiltFile tiltFile = builder.tiltFile;
 
@@ -44,4 +47,37 @@ public class MenuItems
         }
     }
 
+    private static IList<BrushStroke> AlignStokes(IList<BrushStroke> selectedStrokes)
+    {
+        Vector3 min = new Vector3(1000, 1000, 1000);
+        Vector3 max = new Vector3(-1000, -1000, -1000);
+
+        foreach (var stroke in selectedStrokes)
+        {
+            foreach (var point in stroke.controlPoints)
+            {
+                min.x = Mathf.Min(min.x, point.position.x);
+                min.z = Mathf.Min(min.z, point.position.z);
+
+                max.x = Mathf.Max(max.x, point.position.x);
+                max.z = Mathf.Max(max.z, point.position.z);
+            }
+        }
+
+        Vector3 offset = min + 0.5f * (max - min);
+        Debug.Log("Center: " + offset);
+
+        IList<BrushStroke> strokes = new List<BrushStroke>(selectedStrokes.Count);
+        foreach (var stroke in selectedStrokes)
+        {
+            var clone = stroke.Clone();
+            foreach (var point in clone.controlPoints)
+            {
+                point.position -= offset;            
+            }
+            strokes.Add(clone);
+        }
+
+        return strokes;     
+    }
 }
