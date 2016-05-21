@@ -30,7 +30,7 @@ namespace TiltBrush
 
         public override void Write(BinaryWriter writter)
         {
-            writter.Write(m_sentinel);
+            writter.Write(m_sentinel, 4);
             writter.Write(m_headerSize);
             writter.Write(m_headerVersion);
             writter.Write(m_reserved1);

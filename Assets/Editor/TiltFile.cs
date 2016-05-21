@@ -62,9 +62,9 @@ namespace TiltBrush
 
                     try
                     {
+                        m_thumbnailBytes = ReadThumbnailBytes(Path.Combine(tempDir, kFileThumbnail));
                         m_brushStrokes = ReadBrushStrokes(Path.Combine(tempDir, kFileSketchData));
                         m_metadata = ReadMetadata(Path.Combine(tempDir, kFileMetadata));
-                        m_thumbnailBytes = ReadThumbnailBytes(Path.Combine(tempDir, kFileThumbnail));
                     }
                     finally
                     {
@@ -116,10 +116,19 @@ namespace TiltBrush
 
                         using (ZipFile zipFile = new ZipFile())
                         {
-                            foreach (string file in Directory.GetFiles(tempDir))
+                            string[] files =
                             {
-                                zipFile.AddFile(file);
+                                kFileThumbnail,
+                                kFileSketchData,
+                                kFileMetadata
+                            };
+                            
+                            foreach (var file in files)
+                            {
+                                var entry = zipFile.AddFile(Path.Combine(tempDir, file), "/");
+                                entry.CompressionMethod = CompressionMethod.None;
                             }
+
                             zipFile.Save(writter.BaseStream);
                         }
                     }
