@@ -7,6 +7,10 @@ namespace TiltBrush
 {
     public class ControlPoint
     {
+        ControlPoint()
+        {
+        }
+
         public ControlPoint(BinaryReader reader)
         {
             this.position = reader.ReadVector3();
@@ -21,6 +25,16 @@ namespace TiltBrush
             writter.Write(this.orientaion);
             writter.Write(this.pressure);
             writter.Write(this.timestamp);
+        }
+
+        public ControlPoint Clone()
+        {
+            ControlPoint clone = new ControlPoint();
+            clone.orientaion = orientaion;
+            clone.position = position;
+            clone.pressure = pressure;
+            clone.timestamp = timestamp;
+            return clone;
         }
 
         public Quaternion orientaion { get; set; }

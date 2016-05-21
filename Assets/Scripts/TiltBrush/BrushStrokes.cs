@@ -15,6 +15,10 @@ namespace TiltBrush
 
         List<BrushStroke> m_brushStrokes;
 
+        BrushStrokes()
+        {
+        }
+
         public BrushStrokes(BinaryReader reader)
         {
             UInt32 sentinel = reader.ReadUInt32();
@@ -52,6 +56,21 @@ namespace TiltBrush
             }
         }
 
+        public void Clear()
+        {
+            m_brushStrokes.Clear();
+        }
+
+        public void AddAll(IEnumerable<BrushStroke> brushStrokes)
+        {
+            m_brushStrokes.AddRange(brushStrokes);
+        }
+
+        public void Add(BrushStroke brushStroke)
+        {
+            m_brushStrokes.Add(brushStroke);
+        }
+
         #region IEnumerable implementation
 
         public IEnumerator<BrushStroke> GetEnumerator()
@@ -66,6 +85,26 @@ namespace TiltBrush
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return m_brushStrokes.GetEnumerator();
+        }
+
+        #endregion
+
+        #region Clonable
+
+        public BrushStrokes Clone()
+        {
+            BrushStrokes clone = new BrushStrokes();
+            clone.m_version = m_version;
+            clone.m_reserved = m_reserved;
+            clone.m_size = m_size;
+            clone.m_payload = m_payload;
+            List<BrushStroke> brushStrokes = new List<BrushStroke>(m_brushStrokes.Count);
+            foreach (var brushStroke in m_brushStrokes)
+            {
+                brushStrokes.Add(brushStroke.Clone());
+            }
+            clone.m_brushStrokes = brushStrokes;
+            return clone;
         }
 
         #endregion

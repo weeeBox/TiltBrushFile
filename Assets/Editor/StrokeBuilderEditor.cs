@@ -3,6 +3,7 @@ using UnityEditor;
 
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 
 using TiltBrush;
 
@@ -13,7 +14,7 @@ public class StrokeBuilderEditor : Editor
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Button("Build"))
+        if (GUILayout.Button("Load"))
         {
             foreach (var s in GameObject.FindObjectsOfType<FakeStroke>())
             {
@@ -31,7 +32,8 @@ public class StrokeBuilderEditor : Editor
                 stroke.transform.position = brushStroke.controlPoints[0].position;
                 stroke.brushStroke = brushStroke;
                 stroke.transform.parent = builder.transform;
-            }    
-        }
+            }
+            builder.tiltFile = tiltFile;  
+        }        
     }
 }

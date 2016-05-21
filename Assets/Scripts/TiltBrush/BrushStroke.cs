@@ -18,6 +18,10 @@ namespace TiltBrush
         UInt32 m_strokeFlags;
         List<ControlPoint> m_controlPoints;
 
+        BrushStroke()
+        {
+        }
+
         public BrushStroke(BinaryReader reader)
         {
             m_brushIndex = reader.ReadInt32();
@@ -47,6 +51,24 @@ namespace TiltBrush
             {
                 controlPoint.Write(writter);
             }
+        }
+
+        public BrushStroke Clone()
+        {
+            BrushStroke clone = new BrushStroke();
+            clone.m_brushIndex = m_brushIndex;
+            clone.m_brushColor = m_brushColor;
+            clone.m_brushSize = m_brushSize;
+            clone.m_reserver1 = m_reserver1;
+            clone.m_reserver2 = m_reserver2;
+            clone.m_strokeFlags = m_strokeFlags;
+            List<ControlPoint> controlPoints = new List<ControlPoint>(m_controlPoints.Count);
+            foreach (var controlPoint in m_controlPoints)
+            {
+                controlPoints.Add(controlPoint.Clone());
+            }
+            clone.m_controlPoints = controlPoints;
+            return clone;
         }
 
         public Int32 brushIndex

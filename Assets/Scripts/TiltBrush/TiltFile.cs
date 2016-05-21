@@ -25,6 +25,10 @@ namespace TiltBrush
         string m_metadata;
         byte[] m_thumbnailBytes;
 
+        TiltFile()
+        {
+        }
+
         public TiltFile(string path)
         {
             using (FileStream stream = File.OpenRead(path))
@@ -182,9 +186,25 @@ namespace TiltBrush
 
         #endregion
 
+        #region Clonable
+
+        public TiltFile Clone()
+        {
+            TiltFile clone = new TiltFile();
+            clone.m_header = m_header.Clone();
+            clone.m_brushStrokes = m_brushStrokes.Clone();
+            clone.m_metadata = m_metadata;
+            clone.m_thumbnailBytes = new byte[m_thumbnailBytes.Length];
+            Array.Copy(m_thumbnailBytes, clone.m_thumbnailBytes, m_thumbnailBytes.Length);
+            return clone;
+        }
+
+        #endregion
+
         public BrushStrokes brushStrokes
         {
             get { return m_brushStrokes; }
+            set { m_brushStrokes = value; }
         }
     }
 }

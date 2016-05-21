@@ -14,6 +14,10 @@ namespace TiltBrush
         UInt32 m_reserved1;
         UInt32 m_reserved2;
 
+        TiltHeader()
+        {
+        }
+
         public TiltHeader(BinaryReader reader)
         {
             m_sentinel = reader.ReadString(4);
@@ -35,6 +39,17 @@ namespace TiltBrush
             writter.Write(m_headerVersion);
             writter.Write(m_reserved1);
             writter.Write(m_reserved2);
+        }
+
+        public TiltHeader Clone()
+        {
+            TiltHeader clone = new TiltHeader();
+            clone.m_sentinel = m_sentinel;
+            clone.m_headerSize = m_headerSize;
+            clone.m_headerVersion = m_headerVersion;
+            clone.m_reserved1 = m_reserved1;
+            clone.m_reserved2 = m_reserved2;
+            return clone;
         }
     }
 }
