@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TiltBrush
 {
-    public class BrushStrokes : TiltFileChunk, IEnumerable<BrushStroke>
+    public class BrushStrokes : IEnumerable<BrushStroke>
     {
         const UInt32 SKETCH_SENTINEL = 3312887245u;
 
@@ -37,7 +37,7 @@ namespace TiltBrush
             }
         }
 
-        public override void Write(BinaryWriter writter)
+        public void Write(BinaryWriter writter)
         {
             writter.Write(SKETCH_SENTINEL);
             writter.Write(m_version);

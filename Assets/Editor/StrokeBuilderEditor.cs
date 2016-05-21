@@ -30,6 +30,7 @@ public class StrokeBuilderEditor : Editor
                 FakeStroke stroke = Instantiate(template);
                 stroke.transform.position = brushStroke.controlPoints[0].position;
                 stroke.brushStroke = brushStroke;
+                stroke.transform.parent = builder.transform;
             }    
         }
     }

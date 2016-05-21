@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TiltBrush
 {
-    public class ControlPoint : TiltFileChunk
+    public class ControlPoint
     {
         public ControlPoint(BinaryReader reader)
         {
@@ -15,7 +15,7 @@ namespace TiltBrush
             this.timestamp = reader.ReadUInt32(); 
         }
 
-        public override void Write(BinaryWriter writter)
+        public void Write(BinaryWriter writter)
         {
             writter.Write(this.position);
             writter.Write(this.orientaion);

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TiltBrush
 {
-    public class TiltHeader : TiltFileChunk
+    public class TiltHeader
     {
         static readonly string SKETCH_SENTINEL = "tilT";
 
@@ -28,7 +28,7 @@ namespace TiltBrush
             m_reserved2 = reader.ReadUInt32();
         }
 
-        public override void Write(BinaryWriter writter)
+        public void Write(BinaryWriter writter)
         {
             writter.Write(m_sentinel, 4);
             writter.Write(m_headerSize);
