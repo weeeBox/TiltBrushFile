@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 717a013cd3ba0fa44b893eefb2f3ca16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_controlPoint: {fileID: 155808, guid: 3aace00687885db4aa13788980b640e9, type: 2}
+  m_fakeStroke: {fileID: 11479822, guid: c2bd454b4d93ee041a7d705d23a06de6, type: 2}
 --- !u!4 &758104449
 Transform:
   m_ObjectHideFlags: 0

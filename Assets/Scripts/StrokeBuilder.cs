@@ -2,26 +2,13 @@
 using System.Collections;
 using System;
 
-public class StrokeBuilder : MonoBehaviour {
-
+public class StrokeBuilder : MonoBehaviour
+{
     [SerializeField]
-    GameObject m_controlPoint;
+    FakeStroke m_fakeStroke;
     
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    public GameObject controlPoint
+    public FakeStroke fakeStroke
     {
-        get
-        {
-            return m_controlPoint;
-        }
+        get { return m_fakeStroke; }
     }
 }

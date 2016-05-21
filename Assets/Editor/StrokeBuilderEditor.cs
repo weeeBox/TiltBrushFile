@@ -15,19 +15,21 @@ public class StrokeBuilderEditor : Editor
 
         if (GUILayout.Button("Build"))
         {
+            foreach (var s in GameObject.FindObjectsOfType<FakeStroke>())
+            {
+                DestroyImmediate(s.gameObject);
+            }
+
             StrokeBuilder builder = target as StrokeBuilder;
-            GameObject co = builder.controlPoint;
+            FakeStroke template = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
             TiltFile tiltFile = new TiltFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
-                foreach (var controlPoint in brushStroke.controlPoints)
-                {
-                    GameObject instance = Instantiate(co, controlPoint.position, controlPoint.orientaion) as GameObject;
-                    instance.GetComponentInChildren<MeshRenderer>().material.color = brushStroke.brushColor;
-                    instance.name = "Control Point";
-                }   
+                FakeStroke stroke = Instantiate(template);
+                stroke.transform.position = brushStroke.controlPoints[0].position;
+                stroke.brushStroke = brushStroke;
             }    
         }
     }

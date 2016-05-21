@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TiltBrush
 {
-    public class BrushStroke
+    public partial class BrushStroke
     {
         Int32 m_brushIndex;
         Color m_brushColor;
