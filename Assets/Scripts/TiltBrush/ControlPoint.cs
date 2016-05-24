@@ -37,6 +37,11 @@ namespace TiltBrush
             return clone;
         }
 
+        public override string ToString()
+        {
+            return string.Format("Position={0} Orientaion={1} Pressure={2} Timestamp={3}", position, orientaion.eulerAngles, pressure, timestamp);
+        }
+
         public Quaternion orientaion { get; set; }
         public Vector3 position { get; set; }
         public float pressure { get; set; }
