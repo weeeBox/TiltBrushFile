@@ -6,6 +6,12 @@ using TiltBrush;
 public class FakeStroke : MonoBehaviour
 {
     BrushStroke m_brushStroke;
+    MeshFilter m_meshFilter;
+
+    void Awake()
+    {
+        m_meshFilter = GetComponent<MeshFilter>();
+    }
 
     void OnDrawGizmos()
     {
@@ -30,6 +36,12 @@ public class FakeStroke : MonoBehaviour
                 Gizmos.DrawLine(start, end);
                 start = end;
             }
+
+            foreach (var point in m_brushStroke.controlPoints)
+            {
+                // Gizmos.DrawLine(point.position, point.position + point.orientaion * Vector3.forward);
+                Gizmos.DrawLine(point.position, point.position + m_brushStroke.brushSize * point.pressure * (point.orientaion * Vector3.up));
+            }
         }
     }
 
@@ -37,5 +49,23 @@ public class FakeStroke : MonoBehaviour
     {
         get { return m_brushStroke; }
         set { m_brushStroke = value; }
+    }
+    
+    public Mesh sharedMesh
+    {
+        get { return meshFilter.sharedMesh; }
+        set { meshFilter.sharedMesh = value; }
+    }
+
+    MeshFilter meshFilter
+    {
+        get
+        {
+            if (m_meshFilter == null)
+            {
+                m_meshFilter = GetComponent<MeshFilter>();
+            }
+            return m_meshFilter;
+        }
     }
 }

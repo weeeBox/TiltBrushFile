@@ -46,5 +46,15 @@ namespace TiltBrush
         public Vector3 position { get; set; }
         public float pressure { get; set; }
         public UInt32 timestamp { get; set; }
+
+        public Vector3 tangent
+        {
+            get { return pressure * (orientaion * Vector3.up); }
+        }
+
+        public Vector3 normal
+        {
+            get { return orientaion * Vector3.forward; }
+        }
     }
 }
