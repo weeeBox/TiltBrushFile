@@ -35,6 +35,8 @@ public class StrokeBuilderEditor : Editor
                 stroke.transform.parent = builder.transform;
 
                 stroke.sharedMesh = CreateMesh(stroke);
+                stroke.meshRenderer.material.color = stroke.brushStroke.brushColor;
+                
             }
             builder.tiltFile = tiltFile;  
         }        
@@ -51,7 +53,6 @@ public class StrokeBuilderEditor : Editor
 
         Vector3[] vertices = new Vector3[vertexCount];
         Vector3[] normals = new Vector3[vertexCount];
-        Color[] colors = new Color[vertexCount];
         int[] triangles = new int[3 * trianglesCount];
 
         int vertexIndex = 0;
@@ -59,14 +60,8 @@ public class StrokeBuilderEditor : Editor
         {
             Vector3 v1 = point.position;
             Vector3 v2 = v1 + brushStroke.brushSize * point.pressure * point.tangent;
-            
-            vertices[vertexIndex] = v1;
-            vertices[vertexIndex + 1] = v2;
-
-            colors[vertexIndex] = brushStroke.brushColor;
-            colors[vertexIndex + 1] = brushStroke.brushColor;
-
-            vertexIndex += 2;
+            vertices[vertexIndex++] = v1;
+            vertices[vertexIndex++] = v2;
         }
 
         vertexIndex = 0;
@@ -89,7 +84,6 @@ public class StrokeBuilderEditor : Editor
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        mesh.colors = colors;
 
         return mesh;
     }

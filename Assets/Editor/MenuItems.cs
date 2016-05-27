@@ -8,12 +8,67 @@ using System;
 
 public class MenuItems
 {
+    static readonly string kLastOpenDir = "lastOpenDir";
+    static readonly string kLastSaveDir = "lastSaveDir";
+
     [MenuItem("Tilt/Export...")]
     static void ReadTilt()
     {
-        string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
-        TiltFile tiltFile = new TiltFile(path);
-        tiltFile.Write(@"C:\Users\Alex Lementuev\Documents\Tilt Brush\Sketches\test.tilt");
+        string openDirectory = EditorPrefs.GetString(kLastOpenDir, Application.dataPath);
+
+        string openPath = EditorUtility.OpenFilePanelWithFilters("Open Tilt", openDirectory, new string[] { "Tilt Files", "tilt" });
+        if (string.IsNullOrEmpty(openPath)) return;
+
+        openDirectory = new DirectoryInfo(openPath).Parent.ToString();
+        EditorPrefs.SetString(kLastOpenDir, openDirectory);
+
+        TiltFile tiltFile = new TiltFile(openPath);
+
+        tiltFile = ProcessTilt(tiltFile);
+
+        string saveDirectory = EditorPrefs.GetString(kLastSaveDir, openDirectory);
+        string savePath = EditorUtility.SaveFilePanel("Export Tilt", saveDirectory, Path.GetFileNameWithoutExtension(openPath), "tilt");
+        if (string.IsNullOrEmpty(savePath)) return;
+
+        saveDirectory = new DirectoryInfo(savePath).Parent.ToString();
+        EditorPrefs.SetString(kLastSaveDir, saveDirectory);
+
+        tiltFile.Write(savePath);
+    }
+
+    private static TiltFile ProcessTilt(TiltFile tiltFile)
+    {
+        TiltFile clone = tiltFile.Clone();
+        BrushStrokes strokes = clone.brushStrokes;
+        float minY = 100000;
+
+        foreach (var stroke in strokes)
+        {
+            foreach (var point in stroke.controlPoints)
+            {
+                minY = Mathf.Min(minY, point.position.y);
+            }
+        }
+
+        List<BrushStroke> list = new List<BrushStroke>();
+
+        for (int i = -1; i <= 1; ++i)
+        {
+            for (int j = -1; j <= 1; ++j)
+            {
+                foreach (var stroke in strokes)
+                {
+                    BrushStroke cloneStroke = stroke.Clone();
+                    cloneStroke.Translate(i * 50, 0, j * 50);
+                    list.Add(cloneStroke);   
+                }
+            }
+        }
+
+        clone.brushStrokes.Clear();
+        clone.brushStrokes.AddAll(list);
+
+        return clone;
     }
 
     [MenuItem("Tilt/Export selected...")]

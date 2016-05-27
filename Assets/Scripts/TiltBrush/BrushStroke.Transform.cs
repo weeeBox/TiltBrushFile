@@ -20,6 +20,11 @@ namespace TiltBrush
             get { return controlPoints[controlPoints.Count - 1].position; }
         }
 
+        public void Translate(float dx, float dy, float dz)
+        {
+            Translate(new Vector3(dx, dy, dz));
+        }
+
         public void Translate(Vector3 offset)
         {
             foreach (var point in controlPoints)

@@ -3,14 +3,18 @@ using System.Collections;
 
 using TiltBrush;
 
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
 public class FakeStroke : MonoBehaviour
 {
     BrushStroke m_brushStroke;
     MeshFilter m_meshFilter;
+    MeshRenderer m_meshRenderer;
 
     void Awake()
     {
         m_meshFilter = GetComponent<MeshFilter>();
+        m_meshRenderer = GetComponent<MeshRenderer>();
     }
 
     void OnDrawGizmos()
@@ -37,11 +41,11 @@ public class FakeStroke : MonoBehaviour
                 start = end;
             }
 
-            foreach (var point in m_brushStroke.controlPoints)
-            {
-                // Gizmos.DrawLine(point.position, point.position + point.orientaion * Vector3.forward);
-                Gizmos.DrawLine(point.position, point.position + m_brushStroke.brushSize * point.pressure * (point.orientaion * Vector3.up));
-            }
+            //foreach (var point in m_brushStroke.controlPoints)
+            //{
+            //    // Gizmos.DrawLine(point.position, point.position + point.orientaion * Vector3.forward);
+            //    Gizmos.DrawLine(point.position, point.position + m_brushStroke.brushSize * point.pressure * (point.orientaion * Vector3.up));
+            //}
         }
     }
 
@@ -57,7 +61,7 @@ public class FakeStroke : MonoBehaviour
         set { meshFilter.sharedMesh = value; }
     }
 
-    MeshFilter meshFilter
+    public MeshFilter meshFilter
     {
         get
         {
@@ -66,6 +70,18 @@ public class FakeStroke : MonoBehaviour
                 m_meshFilter = GetComponent<MeshFilter>();
             }
             return m_meshFilter;
+        }
+    }
+
+    public MeshRenderer meshRenderer
+    {
+        get
+        {
+            if (m_meshRenderer == null)
+            {
+                m_meshRenderer = GetComponent<MeshRenderer>();
+            }
+            return m_meshRenderer;
         }
     }
 }
