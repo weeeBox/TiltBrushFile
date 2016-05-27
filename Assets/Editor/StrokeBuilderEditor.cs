@@ -23,20 +23,18 @@ public class StrokeBuilderEditor : Editor
             }
 
             StrokeBuilder builder = target as StrokeBuilder;
-            FakeStroke template = builder.fakeStroke;
+            FakeStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
             TiltFile tiltFile = new TiltFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
-                FakeStroke stroke = Instantiate(template);
-                stroke.transform.position = brushStroke.controlPoints[0].position;
-                stroke.brushStroke = brushStroke;
-                stroke.transform.parent = builder.transform;
+                FakeStroke fakeStroke = Instantiate(fakeStrokeTemplate);
+                fakeStroke.transform.position = brushStroke.startPosition;
+                fakeStroke.brushStroke = brushStroke;
+                fakeStroke.transform.parent = builder.transform;
 
-                stroke.sharedMesh = CreateMesh(stroke);
-                stroke.meshRenderer.material.color = stroke.brushStroke.brushColor;
-                
+                fakeStroke.sharedMesh = CreateMesh(fakeStroke);
             }
             builder.tiltFile = tiltFile;  
         }        
@@ -53,6 +51,7 @@ public class StrokeBuilderEditor : Editor
 
         Vector3[] vertices = new Vector3[vertexCount];
         Vector3[] normals = new Vector3[vertexCount];
+        Color[] colors = new Color[vertexCount];
         int[] triangles = new int[3 * trianglesCount];
 
         int vertexIndex = 0;
@@ -60,8 +59,11 @@ public class StrokeBuilderEditor : Editor
         {
             Vector3 v1 = point.position;
             Vector3 v2 = v1 + brushStroke.brushSize * point.pressure * point.tangent;
-            vertices[vertexIndex++] = v1;
-            vertices[vertexIndex++] = v2;
+            int i1 = vertexIndex++;
+            int i2 = vertexIndex++;
+            vertices[i1] = v1;
+            vertices[i2] = v2;
+            colors[i1] = colors[i2] = brushStroke.brushColor;
         }
 
         vertexIndex = 0;
@@ -84,6 +86,7 @@ public class StrokeBuilderEditor : Editor
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.colors = colors;
 
         return mesh;
     }
