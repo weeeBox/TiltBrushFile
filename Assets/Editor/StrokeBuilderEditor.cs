@@ -57,7 +57,7 @@ public class StrokeBuilderEditor : Editor
         int vertexIndex = 0;
         foreach (var point in controlPoints)
         {
-            Vector3 v1 = point.position;
+            Vector3 v1 = point.position - stroke.transform.position;
             Vector3 v2 = v1 + brushStroke.brushSize * point.pressure * point.tangent;
             int i1 = vertexIndex++;
             int i2 = vertexIndex++;
