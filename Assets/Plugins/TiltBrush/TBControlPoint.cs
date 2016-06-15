@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace TiltBrushFile
 {
-    public class ControlPoint
+    public class TBControlPoint
     {
-        ControlPoint()
+        TBControlPoint()
         {
         }
 
-        public ControlPoint(BinaryReader reader)
+        public TBControlPoint(BinaryReader reader)
         {
             this.position = reader.ReadVector3();
             this.orientaion = reader.ReadQuaternion();
@@ -27,9 +27,9 @@ namespace TiltBrushFile
             writter.Write(this.timestamp);
         }
 
-        public ControlPoint Clone()
+        public TBControlPoint Clone()
         {
-            ControlPoint clone = new ControlPoint();
+            TBControlPoint clone = new TBControlPoint();
             clone.orientaion = orientaion;
             clone.position = position;
             clone.pressure = pressure;

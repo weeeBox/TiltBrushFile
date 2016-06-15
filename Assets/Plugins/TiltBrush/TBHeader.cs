@@ -3,7 +3,7 @@ using System.IO;
 
 namespace TiltBrushFile
 {
-    public class TiltHeader
+    public class TBHeader
     {
         static readonly string SKETCH_SENTINEL = "tilT";
 
@@ -14,11 +14,11 @@ namespace TiltBrushFile
         UInt32 m_reserved1;
         UInt32 m_reserved2;
 
-        TiltHeader()
+        TBHeader()
         {
         }
 
-        public TiltHeader(BinaryReader reader)
+        public TBHeader(BinaryReader reader)
         {
             m_sentinel = reader.ReadString(4);
             if (m_sentinel != SKETCH_SENTINEL)
@@ -41,9 +41,9 @@ namespace TiltBrushFile
             writter.Write(m_reserved2);
         }
 
-        public TiltHeader Clone()
+        public TBHeader Clone()
         {
-            TiltHeader clone = new TiltHeader();
+            TBHeader clone = new TBHeader();
             clone.m_sentinel = m_sentinel;
             clone.m_headerSize = m_headerSize;
             clone.m_headerVersion = m_headerVersion;

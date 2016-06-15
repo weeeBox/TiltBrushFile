@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TiltBrushFile
 {
-    public class BrushStrokes : IEnumerable<BrushStroke>
+    public class TBBrushStrokes : IEnumerable<TBBrushStroke>
     {
         const UInt32 SKETCH_SENTINEL = 3312887245u;
 
@@ -13,13 +13,13 @@ namespace TiltBrushFile
         UInt32 m_size;
         byte[] m_payload;
 
-        List<BrushStroke> m_brushStrokes;
+        List<TBBrushStroke> m_brushStrokes;
 
-        BrushStrokes()
+        TBBrushStrokes()
         {
         }
 
-        public BrushStrokes(BinaryReader reader)
+        public TBBrushStrokes(BinaryReader reader)
         {
             UInt32 sentinel = reader.ReadUInt32();
             if (sentinel != SKETCH_SENTINEL)
@@ -34,10 +34,10 @@ namespace TiltBrushFile
             reader.Read(m_payload, 0, m_payload.Length);
 
             Int32 strokeCount = reader.ReadInt32();
-            m_brushStrokes = new List<BrushStroke>(strokeCount);
+            m_brushStrokes = new List<TBBrushStroke>(strokeCount);
             for (int strokeIndex = 0; strokeIndex < strokeCount; ++strokeIndex)
             {
-                m_brushStrokes.Add(new BrushStroke(reader));
+                m_brushStrokes.Add(new TBBrushStroke(reader));
             }
         }
 
@@ -61,19 +61,19 @@ namespace TiltBrushFile
             m_brushStrokes.Clear();
         }
 
-        public void AddAll(IEnumerable<BrushStroke> brushStrokes)
+        public void AddAll(IEnumerable<TBBrushStroke> brushStrokes)
         {
             m_brushStrokes.AddRange(brushStrokes);
         }
 
-        public void Add(BrushStroke brushStroke)
+        public void Add(TBBrushStroke brushStroke)
         {
             m_brushStrokes.Add(brushStroke);
         }
 
         #region IEnumerable implementation
 
-        public IEnumerator<BrushStroke> GetEnumerator()
+        public IEnumerator<TBBrushStroke> GetEnumerator()
         {
             return m_brushStrokes.GetEnumerator();
         }
@@ -91,14 +91,14 @@ namespace TiltBrushFile
 
         #region Clonable
 
-        public BrushStrokes Clone()
+        public TBBrushStrokes Clone()
         {
-            BrushStrokes clone = new BrushStrokes();
+            TBBrushStrokes clone = new TBBrushStrokes();
             clone.m_version = m_version;
             clone.m_reserved = m_reserved;
             clone.m_size = m_size;
             clone.m_payload = m_payload;
-            List<BrushStroke> brushStrokes = new List<BrushStroke>(m_brushStrokes.Count);
+            List<TBBrushStroke> brushStrokes = new List<TBBrushStroke>(m_brushStrokes.Count);
             foreach (var brushStroke in m_brushStrokes)
             {
                 brushStrokes.Add(brushStroke.Clone());
@@ -109,7 +109,7 @@ namespace TiltBrushFile
 
         #endregion
 
-        public List<BrushStroke> brushStrokes
+        public List<TBBrushStroke> brushStrokes
         {
             get { return m_brushStrokes; }
         }

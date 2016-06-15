@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TiltBrushFile
 {
-    public partial class BrushStroke
+    public partial class TBBrushStroke
     {
         public Vector3 startPosition
         {

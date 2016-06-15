@@ -7,7 +7,7 @@ using TiltBrushFile;
 [RequireComponent(typeof(MeshRenderer))]
 public class FakeStroke : MonoBehaviour
 {
-    BrushStroke m_brushStroke;
+    TBBrushStroke m_brushStroke;
     MeshFilter m_meshFilter;
     MeshRenderer m_meshRenderer;
 
@@ -49,7 +49,7 @@ public class FakeStroke : MonoBehaviour
         }
     }
 
-    public BrushStroke brushStroke
+    public TBBrushStroke brushStroke
     {
         get { return m_brushStroke; }
         set { m_brushStroke = value; }

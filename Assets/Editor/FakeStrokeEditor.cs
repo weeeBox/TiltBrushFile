@@ -15,7 +15,7 @@ public class FakeStrokeEditor : Editor
         base.OnInspectorGUI();
 
         FakeStroke fakeStroke = target as FakeStroke;
-        BrushStroke stroke = fakeStroke.brushStroke;
+        TBBrushStroke stroke = fakeStroke.brushStroke;
 
         if (stroke != null)
         {

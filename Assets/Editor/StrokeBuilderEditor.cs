@@ -26,7 +26,7 @@ public class StrokeBuilderEditor : Editor
             FakeStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
-            TiltFile tiltFile = new TiltFile(path);
+            TBFile tiltFile = new TBFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
                 FakeStroke fakeStroke = Instantiate(fakeStrokeTemplate);
@@ -42,7 +42,7 @@ public class StrokeBuilderEditor : Editor
 
     private Mesh CreateMesh(FakeStroke stroke)
     {
-        BrushStroke brushStroke = stroke.brushStroke;
+        TBBrushStroke brushStroke = stroke.brushStroke;
         var controlPoints = brushStroke.controlPoints;
 
         Mesh mesh = new Mesh();

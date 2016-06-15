@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TiltBrushFile
 {
-    public partial class BrushStroke
+    public partial class TBBrushStroke
     {
         const float kMinValue = -10000;
         const float kMaxValue = 10000;

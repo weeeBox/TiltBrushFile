@@ -22,7 +22,7 @@ public class MenuItems
         openDirectory = new DirectoryInfo(openPath).Parent.ToString();
         EditorPrefs.SetString(kLastOpenDir, openDirectory);
 
-        TiltFile tiltFile = new TiltFile(openPath);
+        TBFile tiltFile = new TBFile(openPath);
 
         tiltFile = ProcessTilt(tiltFile);
 
@@ -36,10 +36,10 @@ public class MenuItems
         tiltFile.Write(savePath);
     }
 
-    private static TiltFile ProcessTilt(TiltFile tiltFile)
+    private static TBFile ProcessTilt(TBFile tiltFile)
     {
-        TiltFile clone = tiltFile.Clone();
-        BrushStrokes strokes = clone.brushStrokes;
+        TBFile clone = tiltFile.Clone();
+        TBBrushStrokes strokes = clone.brushStrokes;
         float minY = 100000;
 
         foreach (var stroke in strokes)
@@ -50,7 +50,7 @@ public class MenuItems
             }
         }
 
-        List<BrushStroke> list = new List<BrushStroke>();
+        List<TBBrushStroke> list = new List<TBBrushStroke>();
 
         for (int i = -1; i <= 1; ++i)
         {
@@ -58,7 +58,7 @@ public class MenuItems
             {
                 foreach (var stroke in strokes)
                 {
-                    BrushStroke cloneStroke = stroke.Clone();
+                    TBBrushStroke cloneStroke = stroke.Clone();
                     cloneStroke.Translate(i * 50, 0, j * 50);
                     list.Add(cloneStroke);   
                 }
@@ -74,7 +74,7 @@ public class MenuItems
     [MenuItem("Tilt/Export selected...")]
     static void ExportSelected()
     {
-        IList<BrushStroke> selectedStrokes = new List<BrushStroke>();
+        IList<TBBrushStroke> selectedStrokes = new List<TBBrushStroke>();
         foreach (var selectedObject in Selection.gameObjects)
         {
             FakeStroke stroke = selectedObject.GetComponent<FakeStroke>();
@@ -89,12 +89,12 @@ public class MenuItems
             selectedStrokes = AlignStokes(selectedStrokes);
 
             StrokeBuilder builder = GameObject.FindObjectOfType<StrokeBuilder>();
-            TiltFile tiltFile = builder.tiltFile;
+            TBFile tiltFile = builder.tiltFile;
 
             string path = EditorUtility.SaveFilePanel("Export Tilt", ".", "Tilt", "tilt");
             if (path.Length > 0)
             {
-                TiltFile clone = tiltFile.Clone();
+                TBFile clone = tiltFile.Clone();
                 clone.brushStrokes.Clear();
                 clone.brushStrokes.AddAll(selectedStrokes);
                 clone.Write(path);
@@ -102,7 +102,7 @@ public class MenuItems
         }
     }
 
-    private static IList<BrushStroke> AlignStokes(IList<BrushStroke> selectedStrokes)
+    private static IList<TBBrushStroke> AlignStokes(IList<TBBrushStroke> selectedStrokes)
     {
         Vector3 min = new Vector3(1000, 1000, 1000);
         Vector3 max = new Vector3(-1000, -1000, -1000);
@@ -122,7 +122,7 @@ public class MenuItems
         Vector3 offset = min + 0.5f * (max - min);
         Debug.Log("Center: " + offset);
 
-        IList<BrushStroke> strokes = new List<BrushStroke>(selectedStrokes.Count);
+        IList<TBBrushStroke> strokes = new List<TBBrushStroke>(selectedStrokes.Count);
         foreach (var stroke in selectedStrokes)
         {
             var clone = stroke.Clone();

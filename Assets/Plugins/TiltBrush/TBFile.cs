@@ -11,7 +11,7 @@ using int32 = System.Int32;
 
 namespace TiltBrushFile
 {
-    public class TiltFile
+    public class TBFile
     {
         static readonly string kFileSketchData  = "data.sketch";
         static readonly string kFileMetadata    = "metadata.json";
@@ -20,16 +20,16 @@ namespace TiltBrushFile
         private static readonly uint SKETCH_SENTINEL = 3312887245u;
         private static readonly int SKETCH_VERSION = 5;
 
-        TiltHeader m_header;
-        BrushStrokes m_brushStrokes;
+        TBHeader m_header;
+        TBBrushStrokes m_brushStrokes;
         string m_metadata;
         byte[] m_thumbnailBytes;
 
-        TiltFile()
+        TBFile()
         {
         }
 
-        public TiltFile(string path)
+        public TBFile(string path)
         {
             using (FileStream stream = File.OpenRead(path))
             {
@@ -40,7 +40,7 @@ namespace TiltBrushFile
             }
         }
 
-        public TiltFile(Stream stream)
+        public TBFile(Stream stream)
         {
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -50,7 +50,7 @@ namespace TiltBrushFile
 
         void Read(BinaryReader reader)
         {
-            m_header = new TiltHeader(reader);
+            m_header = new TBHeader(reader);
 
             byte[] bytes = new byte[reader.BaseStream.Length - reader.BaseStream.Position];
             reader.Read(bytes, 0, bytes.Length);
@@ -80,13 +80,13 @@ namespace TiltBrushFile
 
         #region Read
 
-        static BrushStrokes ReadBrushStrokes(string path)
+        static TBBrushStrokes ReadBrushStrokes(string path)
         {
             using (Stream stream = File.OpenRead(path))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
                 {
-                    return new BrushStrokes(reader);
+                    return new TBBrushStrokes(reader);
                 }
             }
         }
@@ -188,9 +188,9 @@ namespace TiltBrushFile
 
         #region Clonable
 
-        public TiltFile Clone()
+        public TBFile Clone()
         {
-            TiltFile clone = new TiltFile();
+            TBFile clone = new TBFile();
             clone.m_header = m_header.Clone();
             clone.m_brushStrokes = m_brushStrokes.Clone();
             clone.m_metadata = m_metadata;
@@ -201,7 +201,7 @@ namespace TiltBrushFile
 
         #endregion
 
-        public BrushStrokes brushStrokes
+        public TBBrushStrokes brushStrokes
         {
             get { return m_brushStrokes; }
             set { m_brushStrokes = value; }

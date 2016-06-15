@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TiltBrushFile
 {
-    public partial class BrushStroke
+    public partial class TBBrushStroke
     {
         Int32 m_brushIndex;
         Color m_brushColor;
@@ -16,13 +16,13 @@ namespace TiltBrushFile
         UInt32 m_reserver1;
         UInt32 m_reserver2;
         UInt32 m_strokeFlags;
-        List<ControlPoint> m_controlPoints;
+        List<TBControlPoint> m_controlPoints;
 
-        BrushStroke()
+        TBBrushStroke()
         {
         }
 
-        public BrushStroke(BinaryReader reader)
+        public TBBrushStroke(BinaryReader reader)
         {
             m_brushIndex = reader.ReadInt32();
             m_brushColor = reader.ReadColor();
@@ -31,10 +31,10 @@ namespace TiltBrushFile
             m_reserver2 = reader.ReadUInt32();
             m_strokeFlags = reader.ReadUInt32();
             int controlPointCount = reader.ReadInt32();
-            m_controlPoints = new List<ControlPoint>();
+            m_controlPoints = new List<TBControlPoint>();
             for (int pointIndex = 0; pointIndex < controlPointCount; ++pointIndex)
             {
-                m_controlPoints.Add(new ControlPoint(reader));
+                m_controlPoints.Add(new TBControlPoint(reader));
             }
         }
 
@@ -53,16 +53,16 @@ namespace TiltBrushFile
             }
         }
 
-        public BrushStroke Clone()
+        public TBBrushStroke Clone()
         {
-            BrushStroke clone = new BrushStroke();
+            TBBrushStroke clone = new TBBrushStroke();
             clone.m_brushIndex = m_brushIndex;
             clone.m_brushColor = m_brushColor;
             clone.m_brushSize = m_brushSize;
             clone.m_reserver1 = m_reserver1;
             clone.m_reserver2 = m_reserver2;
             clone.m_strokeFlags = m_strokeFlags;
-            List<ControlPoint> controlPoints = new List<ControlPoint>(m_controlPoints.Count);
+            List<TBControlPoint> controlPoints = new List<TBControlPoint>(m_controlPoints.Count);
             foreach (var controlPoint in m_controlPoints)
             {
                 controlPoints.Add(controlPoint.Clone());
@@ -88,7 +88,7 @@ namespace TiltBrushFile
             set { m_brushSize = value; }
         }
 
-        public List<ControlPoint> controlPoints
+        public List<TBControlPoint> controlPoints
         {
             get { return m_controlPoints; }
         }
