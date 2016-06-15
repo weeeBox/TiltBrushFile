@@ -42,6 +42,12 @@ public class SketchEditor : Editor
                 stroke.sharedMesh = CreateMesh(stroke, brushStroke);
             }
             sketch.tiltFile = tiltFile;  
+        }
+        
+        if (GUILayout.Button("Animate"))
+        {
+            Sketch sketch = target as Sketch;
+            new SketchAnimator(sketch.GetComponentsInChildren<BrushStroke>()).Start();
         }        
     }
 
