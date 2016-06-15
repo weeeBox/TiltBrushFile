@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using TiltBrush;
+using TiltBrushFile;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]

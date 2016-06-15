@@ -3,7 +3,7 @@ using System.IO;
 
 using UnityEngine;
 
-namespace TiltBrush
+namespace TiltBrushFile
 {
     public class ControlPoint
     {

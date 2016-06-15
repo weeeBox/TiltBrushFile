@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 
-namespace TiltBrush
+namespace TiltBrushFile
 {
     public class BrushStrokes : IEnumerable<BrushStroke>
     {

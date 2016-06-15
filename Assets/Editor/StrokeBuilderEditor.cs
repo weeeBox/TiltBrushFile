@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
-using TiltBrush;
+using TiltBrushFile;
 using System;
 
 [CustomEditor(typeof(StrokeBuilder))]
@@ -26,7 +26,7 @@ public class StrokeBuilderEditor : Editor
             FakeStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
-            TiltBrushFile tiltFile = new TiltBrushFile(path);
+            TiltFile tiltFile = new TiltFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
                 FakeStroke fakeStroke = Instantiate(fakeStrokeTemplate);

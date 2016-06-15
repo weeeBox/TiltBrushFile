@@ -3,7 +3,7 @@ using UnityEditor;
 
 using System.Collections.Generic;
 using System.IO;
-using TiltBrush;
+using TiltBrushFile;
 using System;
 
 public class MenuItems
@@ -22,7 +22,7 @@ public class MenuItems
         openDirectory = new DirectoryInfo(openPath).Parent.ToString();
         EditorPrefs.SetString(kLastOpenDir, openDirectory);
 
-        TiltBrushFile tiltFile = new TiltBrushFile(openPath);
+        TiltFile tiltFile = new TiltFile(openPath);
 
         tiltFile = ProcessTilt(tiltFile);
 
@@ -36,9 +36,9 @@ public class MenuItems
         tiltFile.Write(savePath);
     }
 
-    private static TiltBrushFile ProcessTilt(TiltBrushFile tiltFile)
+    private static TiltFile ProcessTilt(TiltFile tiltFile)
     {
-        TiltBrushFile clone = tiltFile.Clone();
+        TiltFile clone = tiltFile.Clone();
         BrushStrokes strokes = clone.brushStrokes;
         float minY = 100000;
 
@@ -89,12 +89,12 @@ public class MenuItems
             selectedStrokes = AlignStokes(selectedStrokes);
 
             StrokeBuilder builder = GameObject.FindObjectOfType<StrokeBuilder>();
-            TiltBrushFile tiltFile = builder.tiltFile;
+            TiltFile tiltFile = builder.tiltFile;
 
             string path = EditorUtility.SaveFilePanel("Export Tilt", ".", "Tilt", "tilt");
             if (path.Length > 0)
             {
-                TiltBrushFile clone = tiltFile.Clone();
+                TiltFile clone = tiltFile.Clone();
                 clone.brushStrokes.Clear();
                 clone.brushStrokes.AddAll(selectedStrokes);
                 clone.Write(path);

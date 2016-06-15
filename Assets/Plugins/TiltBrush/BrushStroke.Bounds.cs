@@ -6,7 +6,7 @@ using System.Text;
 
 using UnityEngine;
 
-namespace TiltBrush
+namespace TiltBrushFile
 {
     public partial class BrushStroke
     {

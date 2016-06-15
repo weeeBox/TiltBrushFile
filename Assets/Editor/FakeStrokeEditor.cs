@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections;
 
-using TiltBrush;
+using TiltBrushFile;
 
 [CustomEditor(typeof(FakeStroke))]
 public class FakeStrokeEditor : Editor

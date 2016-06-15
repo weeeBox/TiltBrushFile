@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace TiltBrush
+namespace TiltBrushFile
 {
     public class TiltHeader
     {
