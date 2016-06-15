@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-using TiltBrushFile;
-
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class BrushStroke : MonoBehaviour
 {
-    TBBrushStroke m_brushStroke;
     MeshFilter m_meshFilter;
     MeshRenderer m_meshRenderer;
 
@@ -17,12 +14,6 @@ public class BrushStroke : MonoBehaviour
         m_meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public TBBrushStroke brushStroke
-    {
-        get { return m_brushStroke; }
-        set { m_brushStroke = value; }
-    }
-    
     public Mesh sharedMesh
     {
         get { return meshFilter.sharedMesh; }

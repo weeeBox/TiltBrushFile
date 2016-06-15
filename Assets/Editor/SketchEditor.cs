@@ -9,40 +9,41 @@ using TiltBrushFile;
 using System;
 
 [CustomEditor(typeof(Sketch))]
-public class StrokeBuilderEditor : Editor
+public class SketchEditor : Editor
 {
+    static readonly string kLastTiltFileDirectory = "LastTiltFileDirectory";
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        if (GUILayout.Button("Load"))
+        if (GUILayout.Button("Load tilt file"))
         {
-            foreach (var s in GameObject.FindObjectsOfType<BrushStroke>())
+            Sketch sketch = target as Sketch;
+
+            foreach (var s in sketch.GetComponentsInChildren<BrushStroke>())
             {
                 DestroyImmediate(s.gameObject);
             }
 
-            Sketch builder = target as Sketch;
-            BrushStroke fakeStrokeTemplate = builder.fakeStroke;
+            BrushStroke bruskStrokeTemplate = sketch.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
             TBFile tiltFile = new TBFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
-                BrushStroke fakeStroke = Instantiate(fakeStrokeTemplate);
-                fakeStroke.transform.position = brushStroke.startPosition;
-                fakeStroke.brushStroke = brushStroke;
-                fakeStroke.transform.parent = builder.transform;
+                BrushStroke stroke = Instantiate(bruskStrokeTemplate);
+                stroke.transform.position = brushStroke.startPosition;
+                stroke.transform.parent = sketch.transform;
 
-                fakeStroke.sharedMesh = CreateMesh(fakeStroke);
+                stroke.sharedMesh = CreateMesh(stroke, brushStroke);
             }
-            builder.tiltFile = tiltFile;  
+            sketch.tiltFile = tiltFile;  
         }        
     }
 
-    private Mesh CreateMesh(BrushStroke stroke)
+    private Mesh CreateMesh(BrushStroke stroke, TBBrushStroke brushStroke)
     {
-        TBBrushStroke brushStroke = stroke.brushStroke;
         var controlPoints = brushStroke.controlPoints;
 
         Mesh mesh = new Mesh();
