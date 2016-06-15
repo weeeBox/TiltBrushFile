@@ -19,16 +19,19 @@ public class SketchEditor : Editor
 
         if (GUILayout.Button("Load tilt file"))
         {
-            Sketch sketch = target as Sketch;
+            string tiltPath = ResolveTiltFileDirectory();
+            string path = EditorUtility.OpenFilePanel("Open sketch", tiltPath, "tilt");
+            if (string.IsNullOrEmpty(path)) return;
 
+            EditorPrefs.SetString(kLastTiltFileDirectory, Directory.GetParent(path).ToString());
+
+            Sketch sketch = target as Sketch;
             foreach (var s in sketch.GetComponentsInChildren<BrushStroke>())
             {
                 DestroyImmediate(s.gameObject);
             }
 
             BrushStroke bruskStrokeTemplate = sketch.fakeStroke;
-
-            string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
             TBFile tiltFile = new TBFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
@@ -116,4 +119,25 @@ public class SketchEditor : Editor
 
         return mesh;
     }
+
+    #region Helpers
+
+    static string ResolveTiltFileDirectory()
+    {
+        string path = EditorPrefs.GetString(kLastTiltFileDirectory);
+        if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
+        {
+            return path;
+        }
+
+        path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.Combine("Tilt Brush", "Sketches"));
+        if (Directory.Exists(path))
+        {
+            return path;
+        }
+
+        return Application.dataPath;
+    }
+
+    #endregion
 }
