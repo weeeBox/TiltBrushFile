@@ -11,7 +11,7 @@ using int32 = System.Int32;
 
 namespace TiltBrush
 {
-    public class TiltFile
+    public class TiltBrushFile
     {
         static readonly string kFileSketchData  = "data.sketch";
         static readonly string kFileMetadata    = "metadata.json";
@@ -25,11 +25,11 @@ namespace TiltBrush
         string m_metadata;
         byte[] m_thumbnailBytes;
 
-        TiltFile()
+        TiltBrushFile()
         {
         }
 
-        public TiltFile(string path)
+        public TiltBrushFile(string path)
         {
             using (FileStream stream = File.OpenRead(path))
             {
@@ -40,7 +40,7 @@ namespace TiltBrush
             }
         }
 
-        public TiltFile(Stream stream)
+        public TiltBrushFile(Stream stream)
         {
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -188,9 +188,9 @@ namespace TiltBrush
 
         #region Clonable
 
-        public TiltFile Clone()
+        public TiltBrushFile Clone()
         {
-            TiltFile clone = new TiltFile();
+            TiltBrushFile clone = new TiltBrushFile();
             clone.m_header = m_header.Clone();
             clone.m_brushStrokes = m_brushStrokes.Clone();
             clone.m_metadata = m_metadata;

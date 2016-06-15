@@ -22,7 +22,7 @@ public class MenuItems
         openDirectory = new DirectoryInfo(openPath).Parent.ToString();
         EditorPrefs.SetString(kLastOpenDir, openDirectory);
 
-        TiltFile tiltFile = new TiltFile(openPath);
+        TiltBrushFile tiltFile = new TiltBrushFile(openPath);
 
         tiltFile = ProcessTilt(tiltFile);
 
@@ -36,9 +36,9 @@ public class MenuItems
         tiltFile.Write(savePath);
     }
 
-    private static TiltFile ProcessTilt(TiltFile tiltFile)
+    private static TiltBrushFile ProcessTilt(TiltBrushFile tiltFile)
     {
-        TiltFile clone = tiltFile.Clone();
+        TiltBrushFile clone = tiltFile.Clone();
         BrushStrokes strokes = clone.brushStrokes;
         float minY = 100000;
 
@@ -89,12 +89,12 @@ public class MenuItems
             selectedStrokes = AlignStokes(selectedStrokes);
 
             StrokeBuilder builder = GameObject.FindObjectOfType<StrokeBuilder>();
-            TiltFile tiltFile = builder.tiltFile;
+            TiltBrushFile tiltFile = builder.tiltFile;
 
             string path = EditorUtility.SaveFilePanel("Export Tilt", ".", "Tilt", "tilt");
             if (path.Length > 0)
             {
-                TiltFile clone = tiltFile.Clone();
+                TiltBrushFile clone = tiltFile.Clone();
                 clone.brushStrokes.Clear();
                 clone.brushStrokes.AddAll(selectedStrokes);
                 clone.Write(path);

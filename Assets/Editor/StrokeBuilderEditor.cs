@@ -26,7 +26,7 @@ public class StrokeBuilderEditor : Editor
             FakeStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
-            TiltFile tiltFile = new TiltFile(path);
+            TiltBrushFile tiltFile = new TiltBrushFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
                 FakeStroke fakeStroke = Instantiate(fakeStrokeTemplate);

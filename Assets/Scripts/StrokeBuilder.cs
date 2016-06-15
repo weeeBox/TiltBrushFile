@@ -9,14 +9,14 @@ public class StrokeBuilder : MonoBehaviour
     [SerializeField]
     FakeStroke m_fakeStroke;
 
-    TiltFile m_tileFile;
+    TiltBrushFile m_tileFile;
 
     public FakeStroke fakeStroke
     {
         get { return m_fakeStroke; }
     }
 
-    public TiltFile tiltFile
+    public TiltBrushFile tiltFile
     {
         get { return m_tileFile; }
         set { m_tileFile = value; }
