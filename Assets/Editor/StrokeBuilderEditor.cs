@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using TiltBrushFile;
 using System;
 
-[CustomEditor(typeof(StrokeBuilder))]
+[CustomEditor(typeof(Sketch))]
 public class StrokeBuilderEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -22,7 +22,7 @@ public class StrokeBuilderEditor : Editor
                 DestroyImmediate(s.gameObject);
             }
 
-            StrokeBuilder builder = target as StrokeBuilder;
+            Sketch builder = target as Sketch;
             BrushStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");

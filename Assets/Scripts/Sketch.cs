@@ -4,7 +4,7 @@ using System;
 
 using TiltBrushFile;
 
-public class StrokeBuilder : MonoBehaviour
+public class Sketch : MonoBehaviour
 {
     [SerializeField]
     BrushStroke m_fakeStroke;
