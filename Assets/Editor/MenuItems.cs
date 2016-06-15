@@ -77,7 +77,7 @@ public class MenuItems
         IList<TBBrushStroke> selectedStrokes = new List<TBBrushStroke>();
         foreach (var selectedObject in Selection.gameObjects)
         {
-            FakeStroke stroke = selectedObject.GetComponent<FakeStroke>();
+            BrushStroke stroke = selectedObject.GetComponent<BrushStroke>();
             if (stroke != null && stroke.brushStroke != null)
             {
                 selectedStrokes.Add(stroke.brushStroke);

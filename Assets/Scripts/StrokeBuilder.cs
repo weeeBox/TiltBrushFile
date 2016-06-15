@@ -7,11 +7,11 @@ using TiltBrushFile;
 public class StrokeBuilder : MonoBehaviour
 {
     [SerializeField]
-    FakeStroke m_fakeStroke;
+    BrushStroke m_fakeStroke;
 
     TBFile m_tileFile;
 
-    public FakeStroke fakeStroke
+    public BrushStroke fakeStroke
     {
         get { return m_fakeStroke; }
     }

@@ -5,7 +5,7 @@ using TiltBrushFile;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class FakeStroke : MonoBehaviour
+public class BrushStroke : MonoBehaviour
 {
     TBBrushStroke m_brushStroke;
     MeshFilter m_meshFilter;

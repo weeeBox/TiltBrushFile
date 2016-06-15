@@ -17,19 +17,19 @@ public class StrokeBuilderEditor : Editor
 
         if (GUILayout.Button("Load"))
         {
-            foreach (var s in GameObject.FindObjectsOfType<FakeStroke>())
+            foreach (var s in GameObject.FindObjectsOfType<BrushStroke>())
             {
                 DestroyImmediate(s.gameObject);
             }
 
             StrokeBuilder builder = target as StrokeBuilder;
-            FakeStroke fakeStrokeTemplate = builder.fakeStroke;
+            BrushStroke fakeStrokeTemplate = builder.fakeStroke;
 
             string path = Path.Combine(new DirectoryInfo(Application.dataPath).Parent.FullName, "test.tilt");
             TBFile tiltFile = new TBFile(path);
             foreach (var brushStroke in tiltFile.brushStrokes)
             {
-                FakeStroke fakeStroke = Instantiate(fakeStrokeTemplate);
+                BrushStroke fakeStroke = Instantiate(fakeStrokeTemplate);
                 fakeStroke.transform.position = brushStroke.startPosition;
                 fakeStroke.brushStroke = brushStroke;
                 fakeStroke.transform.parent = builder.transform;
@@ -40,7 +40,7 @@ public class StrokeBuilderEditor : Editor
         }        
     }
 
-    private Mesh CreateMesh(FakeStroke stroke)
+    private Mesh CreateMesh(BrushStroke stroke)
     {
         TBBrushStroke brushStroke = stroke.brushStroke;
         var controlPoints = brushStroke.controlPoints;
