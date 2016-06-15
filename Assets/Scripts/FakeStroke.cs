@@ -17,15 +17,15 @@ public class FakeStroke : MonoBehaviour
         m_meshRenderer = GetComponent<MeshRenderer>();
     }
 
-    void OnDrawGizmos()
-    {
-        DrawStroke(false);
-    }
+    //void OnDrawGizmos()
+    //{
+    //    DrawStroke(false);
+    //}
 
-    void OnDrawGizmosSelected()
-    {
-        DrawStroke(true);
-    }
+    //void OnDrawGizmosSelected()
+    //{
+    //    DrawStroke(true);
+    //}
 
     void DrawStroke(bool selected)
     {

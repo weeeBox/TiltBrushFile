@@ -3,8 +3,6 @@
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
-		Cull Off
-		Lighting Off
 		LOD 200
 		
 		CGPROGRAM
