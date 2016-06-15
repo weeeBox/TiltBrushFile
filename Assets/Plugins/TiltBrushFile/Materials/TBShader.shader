@@ -1,7 +1,10 @@
-﻿Shader "Custom/Vertex Color" {
-	Properties {
+﻿Shader "TiltBrushFile/Brush Stroke"
+{
+	Properties
+	{
 	}
-	SubShader {
+	SubShader
+	{
 		Tags { "RenderType"="Opaque" }
 		LOD 200
 		
